@@ -3,9 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>About - Hand Sign Language Detector</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <style>
+        /* Reusing the CSS from the main page */
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #4fc3dc;
+            --background: #f9f9f9;
+            --text: #333;
+            --light: #fff;
+            --dark: #222;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .logo-icon {
+            background-color: var(--light);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        .about-content {
+            background-color: var(--light);
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .about-content h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .about-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .about-section p {
+            margin-bottom: 1rem;
+        }
+        
+        .team-section {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .team-member {
+            text-align: center;
+            max-width: 250px;
+            padding: 1rem;
+            background-color: rgba(74, 111, 165, 0.05);
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+        
+        .team-member img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+        }
+        
+        .footer {
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+    </style>
 </head>
 <body>
-    
+    <div id="app">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="logo-icon">🤲</div>
+                        <h1>Hand Sign Language Detector</h1>
+                    </div>
+                    <nav>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about.html" class="active">About</a></li>
+                            <li><a href="guide.html">Guide</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="container">
+                <div class="about-content">
+                    <h2>About Hand Sign Language Detector</h2>
+                    
+                    <div class="about-section">
+                        <h3>Our Mission</h3>
+                        <p>Hand Sign Language Detector is dedicated to bridging communication gaps and making sign language more accessible through cutting-edge artificial intelligence. Our mission is to create technology that empowers the deaf and hard of hearing community, making communication more intuitive and inclusive.</p>
+                    </div>
+                    
+                    <div class="about-section">
+                        <h3>Technology</h3>
+                        <p>Our advanced machine learning model uses computer vision and deep neural networks to recognize and interpret hand sign language gestures with high accuracy. By analyzing the intricate details of hand positions, we can detect letters, numbers, and potentially even complex sign language phrases.</p>
+                    </div>
+                    
+                    <div class="about-section">
+                        <h3>Impact</h3>
+                        <p>We believe that technology can be a powerful tool for inclusivity. By providing an easy-to-use hand sign detection platform, we aim to:</p>
+                        <ul style="margin-left: 2rem;">
+                            <li>Facilitate better communication</li>
+                            <li>Support sign language learning</li>
+                            <li>Raise awareness about deaf culture</li>
+                            <li>Develop assistive technologies</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="team-section">
+                        <div class="team-member">
+                            <img src="/api/placeholder/150/150" alt="Team Member 1" />
+                            <h4>Sarah Chen</h4>
+                            <p>AI Research Lead</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="/api/placeholder/150/150" alt="Team Member 2" />
+                            <h4>Michael Rodriguez</h4>
+                            <p>Computer Vision Engineer</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="/api/placeholder/150/150" alt="Team Member 3" />
+                            <h4>Emma Thompson</h4>
+                            <p>Accessibility Specialist</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div>
+                        <p>© 2025 Hand Sign Language Detector</p>
+                    </div>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Help & Support</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 </body>
 </html>

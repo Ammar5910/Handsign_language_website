@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide - Hand Sign Language Detector</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <style>
+        /* Reusing the CSS from the main page */
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #4fc3dc;
+            --background: #f9f9f9;
+            --text: #333;
+            --light: #fff;
+            --dark: #222;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .logo-icon {
+            background-color: var(--light);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        .guide-container {
+            background-color: var(--light);
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+        }
+        
+        .guide-container h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .guide-section {
+            margin-bottom: 2rem;
+        }
+        
+        .guide-section h3 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid rgba(74, 111, 165, 0.2);
+            padding-bottom: 0.5rem;
+        }
+        
+        .hand-sign-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        
+        .hand-sign-item {
+            background-color: rgba(74, 111, 165, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .hand-sign-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .hand-sign-item img {
+            max-width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 0.5rem;
+        }
+        
+        .faq-list {
+            background-color: rgba(74, 111, 165, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .faq-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(74, 111, 165, 0.2);
+            padding-bottom: 1rem;
+        }
+        
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .faq-answer {
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        
+        .footer {
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="logo-icon">🤲</div>
+                        <h1>Hand Sign Language Detector</h1>
+                    </div>
+                    <nav>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="guide.html" class="active">Guide</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="container">
+                <div class="guide-container">
+                    <h2>User Guide: Hand Sign Language Detection</h2>
+                    
+                    <div class="guide-section">
+                        <h3>Getting Started</h3>
+                        <p>Our Hand Sign Language Detector helps you recognize and understand sign language gestures. Follow these steps to use the application effectively:</p>
+                        <ol style="margin-left: 2rem;">
+                            <li>Navigate to the home page</li>
+                            <li>Click or drag an image into the upload area</li>
+                            <li>Click "Analyze Image"</li>
+                            <li>View the detected sign and confidence levels</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="guide-section">
+                        <h3>Supported Hand Signs</h3>
+                        <div class="hand-sign-grid">
+                            <div class="hand-sign-item">
+                                <img src="/api/placeholder/100/100" alt="A" />
+                                <p>A: Closed Fist</p>
+                            </div>
+                            <div class="hand-sign-item">
+                                <img src="/api/placeholder/100/100" alt="B" />
+                                <p>B: Open Palm</p>
+                            </div>
+                            <div class="hand-sign-item">
+                                <img src="/api/placeholder/100/100" alt="1" />
+                                <p>1: Index Finger</p>
+                            </div>
+                            <div class="hand-sign-item">
+                                <img src="/api/placeholder/100/100" alt="2" />
+                                <p>2: Two Fingers</p>
+                            </div>
+                            <div class="hand-sign-item">
+                                <img src="/api/placeholder/100/100" alt="3" />
+                                <p>3: Three Fingers</p>
+                            </div>
+                            <div class="hand-sign-item">
+                                <img src="/api/placeholder/100/100" alt="4" />
+                                <p>4: Four Fingers</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-section">
+                        <h3>Best Practices</h3>
+                        <ul style="margin-left: 2rem;">
+                            <li>Use clear, well-lit images</li>
+                            <li>Position hand fully within the frame</li>
+                            <li>Minimize background distractions</li>
+                            <li>Ensure hand is clearly visible</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guide-section">
+                        <h3>Frequently Asked Questions</h3>
+                        <div class="faq-list">

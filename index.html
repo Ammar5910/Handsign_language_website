@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Sign Language Detector</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #4fc3dc;
+            --background: #f9f9f9;
+            --text: #333;
+            --light: #fff;
+            --dark: #222;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .logo-icon {
+            background-color: var(--light);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        @media (min-width: 992px) {
+            .app-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .card {
+            background-color: var(--light);
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 1.25rem 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .controls {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--primary);
+            color: var(--light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .result-container {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .detection-result {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .prediction-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .prediction-item {
+            padding: 1rem;
+            border-radius: 8px;
+            background-color: rgba(74, 111, 165, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .prediction-letter {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--secondary);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light);
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .prediction-confidence {
+            font-weight: 600;
+        }
+        
+        .confidence-bar {
+            flex-grow: 1;
+            height: 10px;
+            margin: 0 1rem;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .confidence-level {
+            height: 100%;
+            background-color: var(--accent);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        
+        .connection-status {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        
+        .status-connected {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: #155724;
+        }
+        
+        .status-disconnected {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #721c24;
+        }
+        
+        .footer {
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .floating-bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .bubble {
+            position: absolute;
+            bottom: -10px;
+            background: rgba(79, 195, 220, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: bubbleRise 15s linear infinite;
+        }
+        
+        @keyframes bubbleRise {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .how-it-works {
+            margin: 3rem 0;
+        }
+        
+        .how-it-works h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .step {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--light);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .step:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-icon {
+            width: 64px;
+            height: 64px;
+            background-color: rgba(74, 111, 165, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .step h3 {
+            margin-bottom: 0.75rem;
+            color: var(--secondary);
+        }
+        
+        .upload-container {
+            border: 2px dashed rgba(74, 111, 165, 0.3);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            position: relative;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(74, 111, 165, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .upload-container:hover {
+            border-color: var(--primary);
+            background-color: rgba(74, 111, 165, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 318px;
+            border-radius: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                gap: 0.75rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="logo-icon">🤲</div>
+                        <h1>Hand Sign Detector</h1>
+                    </div>
+                    <nav>
+                        <ul>
+                            <li><a href="index.html" class="active">Home</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="guide.html">Guide</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="container">
+                <div class="app-container">
+                    <div class="card">
+                        <div class="card-header">
+                            Input Source
+                        </div>
+                        <div class="card-body">
+                            <div class="connection-status" :class="isConnected ? 'status-connected' : 'status-disconnected'">
+                                {{ isConnected ? 'Connected to Backend' : 'Disconnected from Backend' }}
+                            </div>
+                            
+                            <div class="upload-container" @dragover.prevent @drop.prevent="onFileDrop">
+                                <div v-if="!selectedImage">
+                                    <div class="upload-icon">📤</div>
+                                    <p>Drag & drop your image here or click to browse</p>
+                                    <p style="font-size: 0.9rem; margin-top: 0.5rem; color: #666;">
+                                        Supports JPG, PNG and GIF files
+                                    </p>
+                                </div>
+                                <img v-else class="preview-image" :src="selectedImage" />
+                                <input type="file" class="file-input" ref="fileInput" accept="image/*" @change="onFileSelect" />
+                            </div>
+                            
+                            <div class="controls">
+                                <button class="btn btn-success" @click="analyzeImage" :disabled="!selectedImage">
+                                    <span>Analyze Image</span>
+                                </button>
+                                <button class="btn btn-danger" @click="clearImage" :disabled="!selectedImage">
+                                    <span>Clear Image</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            Detection Results
+                        </div>
+                        <div class="card-body result-container">
+                            <div class="detection-result">
+                                {{ currentDetection || '?' }}
+                            </div>
+                            <p>{{ detectionDescription }}</p>
+                            
+                            <div class="prediction-info">
+                                <div class="prediction-item" v-for="(prediction, index) in topPredictions" :key="index">
+                                    <div class="prediction-letter">{{ prediction.symbol }}</div>
+                                    <div class="confidence-bar">
+                                        <div class="confidence-level" :style="{width: (prediction.confidence * 100) + '%'}"></div>
+                                    </div>
+                                    <div class="prediction-confidence">{{ (prediction.confidence * 100).toFixed(1) }}%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="how-it-works">
+                    <h2>How It Works</h2>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-icon">1</div>
+                            <h3>Upload Image</h3>
+                            <p>Upload an image containing hand sign language gestures for letters or numbers.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">2</div>
+                            <h3>Detect Signs</h3>
+                            <p>Our AI model analyzes the input to recognize hand sign language gestures.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">3</div>
+                            <h3>Get Results</h3>
+                            <p>See detection of your hand signs with confidence scores for each prediction.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div>
+                        <p>© 2025 Hand Sign Language Detector</p>
+                    </div>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Help & Support</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        const { createApp, ref, computed, onMounted } = Vue;
+        
+        createApp({
+            setup() {
+                const isConnected = ref(false);
+                const fileInput = ref(null);
+                const currentDetection = ref(null);
+                const bubbles = ref([]);
+                const selectedImage = ref(null);
+                
+                // Top predictions with confidence scores
+                const topPredictions = ref([
+                    { symbol: 'A', confidence: 0.2 },
+                    { symbol: '1', confidence: 0.15 },
+                    { symbol: 'B', confidence: 0.1 }
+                ]);
+                
+                // Backend connection URL (Jupyter server)
+                const backendUrl = 'http://localhost:8888/api/predictions';
+                
+                const detectionDescription = computed(() => {
+                    if (!currentDetection.value) return 'No hand sign detected yet';
+                    
+                    const descriptions = {
+                        'A': 'Closed fist with thumb to the side',
+                        'B': 'Open palm with fingers held upright',
+                        'C': 'Curved hand resembling the letter C',
+                        '1': 'Index finger pointing up, other fingers closed',
+                        '2': 'Index and middle fingers extended, other fingers closed',
+                        '3': 'Thumb, index and middle fingers extended',
+                        '4': 'Four fingers extended, thumb closed',
+                        '5': 'All five fingers extended, palm open',
+                        // Add more descriptions as needed
+                    };
+                    
+                    return descriptions[currentDetection.value] || `Sign for ${currentDetection.value}`;
+                });
+                
+                // Handle file select
+                const onFileSelect = (event) => {
+                    const file = event.target.files[0];
+                    if (file && file.type.match('image.*')) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            selectedImage.value = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+                
+                // Handle file drop
+                const onFileDrop = (event) => {
+                    const file = event.dataTransfer.files[0];
+                    if (file && file.type.match('image.*')) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            selectedImage.value = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+                
+                // Clear the selected image
+                const clearImage = () => {
+                    selectedImage.value = null;
+                    if (fileInput.value) {
+                        fileInput.value.value = '';
+                    }
+                    currentDetection.value = null;
+                    topPredictions.value = [];
+                };
+                
+                // Analyze uploaded image
+                const analyzeImage = () => {
+                    if (!isConnected.value) {
+                        connectToBackend();
+                    }
+                    
+                    // Simulate analysis with random results (replace with actual API calls)
+                    const symbols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                    const randomIndex = Math.floor(Math.random() * symbols.length);
+                    currentDetection.value = symbols[randomIndex];
+                    
+                    // Update predictions with random values
+                    const newPredictions = [];
+                    const mainConfidence = 0.5 + Math.random() * 0.4; // Between 0.5 and 0.9
+                    
+                    newPredictions.push({
+                        symbol: currentDetection.value,
+                        confidence: mainConfidence
+                    });
+                    
+                    // Add some other predictions with lower confidence
+                    for (let i = 0; i < 2; i++) {
+                        const otherSymbolIndex = (randomIndex + i + 1) % symbols.length;
+                        newPredictions.push({
+                            symbol: symbols[otherSymbolIndex],
+                            confidence: Math.random() * (0.9 - mainConfidence)
+                        });
+                    }
+                    
+                    // Sort by confidence
+                    topPredictions.value = newPredictions.sort((a, b) => b.confidence - a.confidence);
+                    
+                    // In a real implementation, you would send the image to your backend:
+                    // sendImageToBackend(selectedImage.value);
+                };
+                
+                // Connect to backend
+                const connectToBackend = async () => {
+                    try {
+                        // Simulating a connection to the backend
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        isConnected.value = true;
+                        console.log('Connected to backend');
+                    } catch (error) {
+                        console.error('Error connecting to backend:', error);
+                        isConnected.value = false;
+                    }
+                };
+                
+                // Create background bubbles effect
+                const createBubbles = () => {
+                    const numberOfBubbles = 15;
+                    const newBubbles = [];
+                    
+                    for (let i = 0; i < numberOfBubbles; i++) {
+                        newBubbles.push({
+                            id: i,
+                            left: Math.random() * 100,
+                            size: 10 + Math.random() * 30,
+                            duration: 10 + Math.random() * 20,
+                            delay: Math.random() * 5
+                        });
+                    }
+                    
+                    bubbles.value = newBubbles;
+                };
+                
+                // Send image to backend (for real implementation)
+                const sendImageToBackend = async (imageData) => {
+                    try {
+                        // In a real implementation, you would send this to your backend:
+                        // const response = await fetch(backendUrl, {
+                        //     method: 'POST',
+                        //     headers: { 'Content-Type': 'application/json' },
+                        //     body: JSON.stringify({ image: imageData })
+                        // });
+                        // const result = await response.json();
+                        // return result;
+                    } catch (error) {
+                        console.error('Error sending image to backend:', error);
+                    }
+                };
+                
+                onMounted(() => {
+                    connectToBackend();
+                    createBubbles();
+                });
+                
+                return {
+                    isConnected,    
+                    fileInput,
+                    currentDetection,
+                    topPredictions,
+                    bubbles,
+                    detectionDescription,
+                    selectedImage,
+                    onFileSelect,
+                    onFileDrop,
+                    clearImage,
+                    analyzeImage
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

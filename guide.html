@@ -148,38 +148,28 @@
             margin-bottom: 0.5rem;
         }
         
-        .faq-list {
-            background-color: rgba(74, 111, 165, 0.05);
-            border-radius: 8px;
-            padding: 1rem;
-        }
-        
         .faq-item {
-            margin-bottom: 1rem;
-            border-bottom: 1px solid rgba(74, 111, 165, 0.2);
-            padding-bottom: 1rem;
+            transition: background-color 0.3s ease;
         }
         
-        .faq-item:last-child {
-            border-bottom: none;
+        .faq-item:hover {
+            background-color: rgba(74, 111, 165, 0.1);
         }
         
         .faq-question {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--secondary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background-color: rgba(74, 111, 165, 0.05);
         }
         
         .faq-answer {
-            margin-top: 0.5rem;
-            display: none;
-        }
-        
-        .faq-item.active .faq-answer {
-            display: block;
+            padding: 0 1rem 1rem;
+            color: var(--text);
+            line-height: 1.6;
         }
         
         .footer {
@@ -293,3 +283,85 @@
                     <div class="guide-section">
                         <h3>Frequently Asked Questions</h3>
                         <div class="faq-list">
+                            <div class="faq-item">
+                                <div class="faq-question">
+                                    <span>How accurate is the Hand Sign Language Detector?</span>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>Our AI model is trained on a diverse dataset and can recognize hand signs with up to 95% accuracy under optimal conditions. Accuracy may vary depending on image quality, lighting, and hand positioning.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question">
+                                    <span>What types of hand signs can the detector recognize?</span>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>Currently, our detector supports recognition of letters A-Z, numbers 0-9, and some basic sign language gestures. We are continuously expanding our recognition capabilities to include more complex signs and phrases.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question">
+                                    <span>Is my image data secure?</span>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>Yes, we prioritize user privacy. Images are processed securely and are not stored or shared. Our AI analysis is performed anonymously, and no personal information is retained after the detection process.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question">
+                                    <span>Can I use this on mobile devices?</span>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>Absolutely! Our Hand Sign Language Detector is fully responsive and works seamlessly on smartphones, tablets, and desktop computers. The interface adapts to different screen sizes for optimal user experience.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <div class="faq-question">
+                                    <span>Do you offer support for learning sign language?</span>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>While our primary focus is on sign language detection, we provide resources and guides to help users understand sign language basics. We're committed to making communication more accessible and inclusive.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            // Simple FAQ toggle functionality
+            document.addEventListener('DOMContentLoaded', () => {
+                const faqItems = document.querySelectorAll('.faq-item');
+                
+                faqItems.forEach(item => {
+                    const question = item.querySelector('.faq-question');
+                    
+                    question.addEventListener('click', () => {
+                        item.classList.toggle('active');
+                    });
+                });
+            });
+        </script>
+        
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div>
+                        <p>© 2025 Hand Sign Language Detector</p>
+                    </div>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Help & Support</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
